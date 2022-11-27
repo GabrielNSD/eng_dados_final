@@ -1,7 +1,17 @@
+import sys
 from pyspark import SparkContext
 
-import pyspark
 from pyspark.sql import SparkSession
+
+try:
+    print(len(sys.argv))
+    if len(sys.argv) < 2:
+        raise Exception("Insira o numero da linha quando executar o programa")
+except Exception as ex:
+    print(ex)
+    sys.exit(1)
+
+n = sys.argv[1]
 
 spark = SparkSession.builder \
                             .master("local") \
@@ -40,25 +50,17 @@ def red_func(x, y):
 
 mapped = joined_rdd.map(map_func)
 
-mapped.persist
-
 
 def map2(line):
-    return {"ponto": line["ponto"], "horario": line["hora"]}
+    return {"nome_linha": line["nome"], "ponto": line["ponto"], "horario": line["hora"]}
 
 
-num_linha = input("Insira o numero da linha: ")
-
-print("linha escolhida: ", num_linha)
-
-resultado = mapped.filter(lambda x: x["num_linha"] == str(num_linha)).map(
+resultado = mapped.filter(lambda x: x["num_linha"] == str(n)).map(
     map2).collect()
-
-print("fim do filter")
 
 if (len(resultado) == 0):
     print("linha nao encontrada")
 else:
-    print("linha 340: ")
+    print(f"linha {n}: ")
     for entry in resultado:
         print(entry)
