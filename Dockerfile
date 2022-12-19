@@ -39,7 +39,7 @@ ENV HADOOP_CONF_DIR "${HADOOP_HOME}/etc/hadoop"
 ENV HADOOP_COMMON_LIB_NATIVE_DIR "${HADOOP_HOME}/lib/native"
 ENV HADOOP_OPTS "${HADOOP_OPTS} -XX:-PrintWarnings -Djava.net.preferIPv4Stack=true -Djava.library.path=${HADOOP_COMMON_LIB_NATIVE_DIR}"
 ENV LD_LIBRARY_PATH "${HADOOP_COMMON_LIB_NATIVE_DIR}"
-ENV JAVA_HOME "/usr/lib/jvm/java-8-openjdk-arm64/jre"
+#ENV JAVA_HOME "/usr/lib/jvm/java-8-openjdk-arm64/jre"
 #ENV _JAVA_OPTIONS "-Xmx2048m"
 ENV HDFS_NAMENODE_USER "root"
 ENV HDFS_DATANODE_USER "${HDFS_NAMENODE_USER}"
@@ -47,16 +47,25 @@ ENV HDFS_SECONDARYNAMENODE_USER "${HDFS_NAMENODE_USER}"
 ENV YARN_RESOURCEMANAGER_USER "${HDFS_NAMENODE_USER}"
 ENV YARN_NODEMANAGER_USER "${HDFS_NAMENODE_USER}"
 ENV SPARK_HOME "${HADOOP_HOME}/spark"
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+RUN apkArch="$(dpkg --print-architecture)"; \
+    case "$apkArch" in \
+    arm64) export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-arm64/jre" ;; \
+    x86) export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/jre" ;; \
+    esac
+
 ENV PATH "$PATH:${HADOOP_HOME}/sbin:${HADOOP_HOME}/bin:${JAVA_HOME}/bin:${SPARK_HOME}/bin:${SPARK_HOME}/sbin"
 
 # Copy and extract Hadoop to container filesystem
 # Download hadoop-3.3.4.tar.gz from Apache (if needed)
-#RUN wget --no-check-certificate https://dlcdn.apache.org/hadoop/common/hadoop-3.3.4/hadoop-3.3.4.tar.gz
+RUN wget --no-check-certificate https://dlcdn.apache.org/hadoop/common/hadoop-3.3.4/hadoop-3.3.4.tar.gz
 RUN tar -zxf hadoop-3*.tar.gz -C ${MYDIR} && rm -rf hadoop-3*.tar.gz
 RUN ln -sf hadoop-3* hadoop
 
 # Download spark-3.3.1-bin-hadoop3.tgz from Apache (if needed)
-#RUN wget --no-check-certificate https://dlcdn.apache.org/spark/spark-3.3.1/spark-3.3.1-bin-hadoop3.tgz
+RUN wget --no-check-certificate https://dlcdn.apache.org/spark/spark-3.3.1/spark-3.3.1-bin-hadoop3.tgz
 RUN tar -zxf spark-3*-bin-hadoop3.tgz -C ${HADOOP_HOME} && rm -rf spark-3*-bin-hadoop3.tgz
 RUN ln -sf ${HADOOP_HOME}/spark-3*-bin-hadoop3 ${HADOOP_HOME}/spark
 

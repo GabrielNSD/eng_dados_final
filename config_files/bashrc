@@ -1,4 +1,7 @@
 
+[[ $arch == arm* ]] && export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-arm64444/jre/"
+[[ $arch == x86* ]] && export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/jre/"
+
 #
 # Environment variables for Apache Hadoop 3.x.x + Spark 3.x.x
 #

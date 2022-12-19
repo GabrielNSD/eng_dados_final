@@ -61,6 +61,14 @@
 
 # The java implementation to use. By default, this environment
 # variable is REQUIRED on ALL platforms except OS X!
+arch=$(uname -i)
+if [[ $arch == x86_64* ]]; then
+    export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/jre"
+elif [[ $arch == i*86 ]]; then
+    echo "X32 Architecture"
+elif  [[ $arch == arm* ]]; then
+    export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-arm64/jre"
+fi
 export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-arm64/jre"
 
 # Location of Hadoop.  By default, Hadoop will attempt to determine
