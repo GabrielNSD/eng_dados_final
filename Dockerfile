@@ -13,7 +13,7 @@
 #
 
 # Import base image
-FROM ubuntu:20.04
+FROM mongo:latest
 
 # Defines user and working dir
 USER root

@@ -74,6 +74,10 @@ if [ "$HOSTNAME" == "node-master" ] ; then
     hdfs dfs -mkdir /spark-logs
     hdfs dfs -mkdir /spark-libs
     hdfs dfs -put ${SPARK_HOME}/jars/*.jar /spark-libs/
+    hdfs dfs -put /root/apps/cars.csv
+
+    #Start mongod service
+    mongod --bind_ip_all --fork --logpath /root/config_files/mongod.log
 
     # Start SPARK history server
     printf " * [${green}SPARK${reset}] ${lblue}Starting SPARK history server${reset}...\n"

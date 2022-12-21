@@ -37,9 +37,18 @@ services:
       - 9870:9870
       - 8088:8088
       - 18080:18080
+      - 27017:27017
     command: /root/config_files/bootstrap.sh
     volumes: 
       - ./apps:/root/apps
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://172.18.0.2:27017/
 
   slave1:
     container_name: slave1
