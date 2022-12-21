@@ -1,3 +1,13 @@
+#### Fork do repositório: https://github.com/cmdviegas/docker-hadoop-cluster 
+  
+Passos para execução do programa:
+ - Execute do docker compose: `docker-compose up --build`
+ - Acesse o container "node-master" com o comando `docker exec -it node-master /bin/bash`
+ - Acesse o diretório  "apps": ```cd apps```
+ - Preencha o banco de dados com o dataset: `spark-submit --packages org.mongodb.spark:mongo-spark-connector:10.0.5 seed_carros.py`
+ - Execute as análises: `spark-submit --packages org.mongodb.spark:mongo-spark-connector:10.0.5 app_carros.py`
+ - Copie os arquivos de resultados para a máquina local com o comando `hdfs dfs -get . ./apps`
+
 ## Deploying APACHE HADOOP 3.x.x + APACHE SPARK 3.x.x
 
 This is a script to deploy Apache Hadoop in distributed mode using Docker as infrastructure.
